@@ -1,0 +1,80 @@
+# 🐳 CRM System - Minimal Docker Image for Low-Space Servers
+# Single-stage build optimized for minimal disk usage
+
+FROM node:18-alpine
+
+# Install only essential system dependencies
+RUN apk add --no-cache \
+    sqlite \
+    openssl \
+    ca-certificates \
+    && rm -rf /var/cache/apk/*
+
+WORKDIR /app
+
+# Create non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
+# Copy package files first for better caching
+COPY package.json package-lock.json* ./
+
+# Install dependencies with optimizations for space
+RUN npm ci --omit=dev --cache /tmp/.npm && \
+    npm cache clean --force && \
+    rm -rf /tmp/.npm /root/.npm
+
+# Copy source code
+COPY . .
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build application
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+RUN npm run build
+
+# Clean up unnecessary files to save space
+RUN rm -rf \
+    src/ \
+    .next/cache/ \
+    node_modules/.cache/ \
+    prisma/migrations/ \
+    scripts/ \
+    docs/ \
+    *.md \
+    .git* \
+    .env.example
+
+# Remove development files from node_modules
+RUN find node_modules/ -name "*.md" -delete && \
+    find node_modules/ -name "test*" -type d -exec rm -rf {} + 2>/dev/null || true && \
+    find node_modules/ -name "*.test.js" -delete 2>/dev/null || true && \
+    find node_modules/ -name "*.spec.js" -delete 2>/dev/null || true
+
+# Create data directories
+RUN mkdir -p /app/data /app/uploads /app/backups && \
+    chown -R nextjs:nodejs /app
+
+# Copy startup script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+# Switch to non-root user
+USER nextjs
+
+# Expose port
+EXPOSE 3000
+
+# Environment variables
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+# Start application
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["npm", "start"]
