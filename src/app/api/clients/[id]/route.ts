@@ -102,7 +102,7 @@ export async function PUT(
     }
 
     // Check if email is already taken by another client
-    if (cleanData.email !== existingClient.email) {
+    if (cleanData.email && cleanData.email !== existingClient.email) {
       const emailExists = await prisma.client.findFirst({
         where: {
           email: cleanData.email,
