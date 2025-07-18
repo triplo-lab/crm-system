@@ -72,13 +72,6 @@ export async function GET(request: NextRequest) {
               id: true,
               name: true
             }
-          },
-          creator: {
-            select: {
-              id: true,
-              name: true,
-              email: true
-            }
           }
         },
         orderBy: {
@@ -183,7 +176,6 @@ export async function POST(request: NextRequest) {
         total,
         notes,
         status: 'DRAFT',
-        createdBy: user.id,
         items: items ? {
           create: items.map((item: any) => ({
             description: item.description,
@@ -207,14 +199,7 @@ export async function POST(request: NextRequest) {
             name: true
           }
         },
-        items: true,
-        creator: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
+        items: true
       }
     })
 
