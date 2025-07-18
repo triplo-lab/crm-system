@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', 'prisma']
-  },
-  // Optimize for Docker
-  swcMinify: true,
+  serverExternalPackages: ['@prisma/client', 'prisma'],
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production' ? {
       exclude: ['error']
