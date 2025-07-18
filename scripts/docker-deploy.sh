@@ -15,7 +15,7 @@ CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
 # Configuration
-REPO_URL="https://github.com/username/crm-system.git"  # Change this to your repo
+REPO_URL="https://github.com/triplo-lab/crm-system.git"
 DEPLOY_DIR="/opt/crm-system"
 BACKUP_DIR="/opt/crm-backups"
 SERVICE_NAME="crm-system"
