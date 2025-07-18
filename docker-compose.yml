@@ -1,0 +1,109 @@
+# 🐳 CRM System - Docker Compose Configuration
+# Maintains exact same functionality as current system
+
+version: '3.8'
+
+services:
+  # Main CRM Application
+  crm-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: crm-system
+    ports:
+      - "3000:3000"
+    environment:
+      # Database (using SQLite to maintain current setup)
+      - DATABASE_URL=file:/app/data/crm.db
+      
+      # Authentication
+      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_SECRET=your-super-secret-key-change-in-production
+      
+      # Application
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      
+      # Disable telemetry
+      - NEXT_TELEMETRY_DISABLED=1
+      
+    volumes:
+      # Persist database and uploads
+      - crm_data:/app/data
+      - crm_uploads:/app/uploads
+      - crm_backups:/app/backups
+      
+      # Optional: Mount local .env for easy config changes
+      - ./.env.docker:/app/.env:ro
+      
+    restart: unless-stopped
+    
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Resource limits (adjust based on your server)
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+          cpus: '1.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+    
+    networks:
+      - crm-network
+
+  # Optional: Nginx reverse proxy for better performance
+  nginx:
+    image: nginx:alpine
+    container_name: crm-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+      - crm_uploads:/var/www/uploads:ro
+    depends_on:
+      - crm-app
+    restart: unless-stopped
+    networks:
+      - crm-network
+
+# Named volumes for data persistence
+volumes:
+  crm_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/database
+  
+  crm_uploads:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/uploads
+  
+  crm_backups:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ./docker-data/backups
+
+# Network for service communication
+networks:
+  crm-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

@@ -1,0 +1,120 @@
+/* PDF Generation Styles */
+.pdf-content {
+  -webkit-print-color-adjust: exact !important;
+  color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  /* Force standard colors to avoid oklch issues */
+  color: rgb(0, 0, 0) !important;
+  background-color: rgb(255, 255, 255) !important;
+}
+
+.pdf-content * {
+  -webkit-print-color-adjust: exact !important;
+  color-adjust: exact !important;
+  print-color-adjust: exact !important;
+  /* Override any oklch colors */
+  color: inherit !important;
+  background-color: inherit !important;
+}
+
+/* Override Tailwind dark mode classes for PDF */
+.pdf-content .bg-slate-800,
+.pdf-content .bg-slate-900,
+.pdf-content .bg-gray-800,
+.pdf-content .bg-gray-900 {
+  background-color: rgb(255, 255, 255) !important;
+}
+
+.pdf-content .text-white,
+.pdf-content .text-slate-100,
+.pdf-content .text-slate-200 {
+  color: rgb(0, 0, 0) !important;
+}
+
+.pdf-content .text-slate-400,
+.pdf-content .text-slate-500,
+.pdf-content .text-gray-400,
+.pdf-content .text-gray-500 {
+  color: rgb(107, 114, 128) !important;
+}
+
+.pdf-content .border-slate-700,
+.pdf-content .border-gray-700 {
+  border-color: rgb(229, 229, 229) !important;
+}
+
+.pdf-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 16px 0;
+}
+
+.pdf-content th,
+.pdf-content td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.pdf-content th {
+  background-color: #f5f5f5 !important;
+  font-weight: bold;
+}
+
+.pdf-content .company-header {
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e5e5e5;
+}
+
+.pdf-content .proposal-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 24px 0;
+  text-align: center;
+}
+
+.pdf-content .section-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 20px 0 12px 0;
+  color: #333;
+}
+
+.pdf-content .client-info {
+  background-color: #f9f9f9 !important;
+  padding: 16px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.pdf-content .items-table {
+  margin: 24px 0;
+}
+
+.pdf-content .total-section {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid #e5e5e5;
+}
+
+.pdf-content .approval-section {
+  margin-top: 32px;
+  padding: 16px;
+  background-color: #f0f8ff !important;
+  border-radius: 8px;
+}
+
+/* Hide elements that shouldn't appear in PDF */
+.pdf-content .no-print {
+  display: none !important;
+}
+
+/* Ensure proper page breaks */
+.pdf-content .page-break {
+  page-break-before: always;
+}
+
+.pdf-content .avoid-break {
+  page-break-inside: avoid;
+}

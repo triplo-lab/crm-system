@@ -1,0 +1,103 @@
+# 🐳 Docker ignore file for CRM System
+# Excludes unnecessary files from Docker build context
+
+# Dependencies
+node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Next.js
+.next/
+out/
+build/
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files (will be handled by volumes)
+prisma/dev.db
+prisma/dev.db-journal
+*.db
+*.db-journal
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker files (except the ones we need)
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+*.md
+docs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Uploads (will be handled by volumes)
+uploads/
+public/uploads/
+
+# Backups
+backups/
+*.sql
+*.backup
+
+# Development files
+.eslintrc.json
+.prettierrc
+jest.config.js
+cypress/
+cypress.config.js
+
+# Testing
+__tests__/
+**/*.test.js
+**/*.test.ts
+**/*.spec.js
+**/*.spec.ts
+
+# Storybook
+.storybook/
+storybook-static/
+
+# Local development
+.env.example
+docker-data/
