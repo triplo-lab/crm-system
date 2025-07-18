@@ -98,7 +98,7 @@ const getCachedDashboardStats = cacheDashboardStats(
     // Calculate changes (mock data for now)
     const projectsChange = projectsThisMonth > 0 ? "+12%" : "0%"
     const clientsChange = clientsThisMonth > 0 ? "+8%" : "0%"
-    const revenueChange = proposalsValue > 0 ? "+15%" : "0%"
+    const revenueChange = (proposalsValue._sum.total || 0) > 0 ? "+15%" : "0%"
     const timeChange = "+5%"
 
     return {
@@ -115,10 +115,10 @@ const getCachedDashboardStats = cacheDashboardStats(
         trend: clientsThisMonth > 0 ? "up" : "down"
       },
       revenue: {
-        total: proposalsValue,
-        thisMonth: proposalsValue,
+        total: proposalsValue._sum.total || 0,
+        thisMonth: proposalsValue._sum.total || 0,
         change: revenueChange,
-        trend: proposalsValue > 0 ? "up" : "down"
+        trend: (proposalsValue._sum.total || 0) > 0 ? "up" : "down"
       },
       timeTracking: {
         hoursThisWeek: 40,
