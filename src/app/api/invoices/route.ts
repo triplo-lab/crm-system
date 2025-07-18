@@ -54,9 +54,9 @@ export async function GET(request: NextRequest) {
           status: true,
           issueDate: true,
           dueDate: true,
-          totalAmount: true,
+          total: true,
           taxAmount: true,
-          subtotalAmount: true,
+          subtotal: true,
           notes: true,
           createdAt: true,
           updatedAt: true,
@@ -129,15 +129,15 @@ export async function POST(request: NextRequest) {
       projectId,
       issueDate,
       dueDate,
-      subtotalAmount,
+      subtotal,
       taxAmount,
-      totalAmount,
+      total,
       notes,
       items
     } = body
 
     // Validate required fields
-    if (!number || !clientId || !issueDate || !dueDate || !totalAmount) {
+    if (!number || !clientId || !issueDate || !dueDate || !total) {
       return NextResponse.json(
         { error: 'Campos obrigatórios em falta' },
         { status: 400 }
@@ -178,9 +178,9 @@ export async function POST(request: NextRequest) {
         projectId,
         issueDate: new Date(issueDate),
         dueDate: new Date(dueDate),
-        subtotalAmount: subtotalAmount || 0,
+        subtotal: subtotal || 0,
         taxAmount: taxAmount || 0,
-        totalAmount,
+        total,
         notes,
         status: 'DRAFT',
         createdBy: user.id,

@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { formatDistanceToNow as formatDistanceToNowFns } from "date-fns"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -42,6 +43,17 @@ export function formatDateTime(date: Date | string): string {
     hour: '2-digit',
     minute: '2-digit',
   }).format(dateObj)
+}
+
+export function formatDistanceToNow(date: Date | string): string {
+  if (!date) return 'Data inválida'
+
+  const dateObj = new Date(date)
+  if (isNaN(dateObj.getTime())) {
+    return 'Data inválida'
+  }
+
+  return formatDistanceToNowFns(dateObj, { addSuffix: true })
 }
 
 export function formatTime(seconds: number): string {
